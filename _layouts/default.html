@@ -13,6 +13,7 @@
       background-color: #fafafa;
       margin: 0;
       padding: 0;
+      overflow-x: hidden; /* Prevent page-wide horizontal scrolling */
     }
 
     main {
@@ -22,6 +23,7 @@
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      overflow-x: hidden; /* Prevent container horizontal scrolling */
     }
 
     h1, h2, h3 {
@@ -68,24 +70,72 @@
       text-decoration: underline;
     }
 
-    /* ✅ Scrollable long equations */
-    .math-display {
+    /* ✅ Scrollable long equations - MathJax 3.x */
+    /* Target MathJax display math containers (various formats) */
+    .MathJax-Display,
+    .MathJax_Display,
+    div.MathJax_Display,
+    mjx-container[jax="CHTML"][display="true"],
+    mjx-container[display="true"] {
+      display: block !important;
+      width: 100% !important;
+      max-width: 100% !important;
       overflow-x: auto !important;
-      overflow-y: hidden;
-      max-width: 100%;
-      -webkit-overflow-scrolling: touch;
+      overflow-y: hidden !important;
+      margin: 1em 0 !important;
+      box-sizing: border-box;
     }
 
-    .math-display > .MathJax {
-      padding-bottom: 0.5rem;
+    /* Ensure the MathJax content itself can scroll horizontally */
+    /* Math content should maintain its natural width to allow scrolling */
+    mjx-container[jax="CHTML"][display="true"] > mjx-math,
+    mjx-container[display="true"] > mjx-math {
+      display: inline-block;
     }
 
-    .math-display::-webkit-scrollbar {
+    /* Style scrollbar for better UX on display equations */
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    .MathJax-Display::-webkit-scrollbar,
+    .MathJax_Display::-webkit-scrollbar,
+    div.MathJax_Display::-webkit-scrollbar,
+    mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar,
+    mjx-container[display="true"]::-webkit-scrollbar {
       height: 8px;
     }
-    .math-display::-webkit-scrollbar-thumb {
+
+    .MathJax-Display::-webkit-scrollbar-thumb,
+    .MathJax_Display::-webkit-scrollbar-thumb,
+    div.MathJax_Display::-webkit-scrollbar-thumb,
+    mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb,
+    mjx-container[display="true"]::-webkit-scrollbar-thumb {
       background: #ccc;
       border-radius: 4px;
+    }
+
+    .MathJax-Display::-webkit-scrollbar-thumb:hover,
+    .MathJax_Display::-webkit-scrollbar-thumb:hover,
+    div.MathJax_Display::-webkit-scrollbar-thumb:hover,
+    mjx-container[jax="CHTML"][display="true"]::-webkit-scrollbar-thumb:hover,
+    mjx-container[display="true"]::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+
+    /* Firefox scrollbar styling */
+    .MathJax-Display,
+    .MathJax_Display,
+    div.MathJax_Display,
+    mjx-container[jax="CHTML"][display="true"],
+    mjx-container[display="true"] {
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
+    }
+
+    /* Ensure inline math doesn't break layout */
+    mjx-container:not([display="true"]) {
+      display: inline-block;
+      max-width: 100%;
+      overflow-x: auto;
+      vertical-align: middle;
     }
   </style>
 </head>
