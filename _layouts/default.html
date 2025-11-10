@@ -16,9 +16,9 @@
     }
 
     main {
-      max-width: 850px; /* limit width for readability */
-      margin: 3rem auto; /* center content */
-      padding: 0 1.5rem; /* left/right padding on mobile */
+      max-width: 850px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
       background-color: white;
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -67,17 +67,21 @@
     a:hover {
       text-decoration: underline;
     }
-      /* Wrap long MathJax equations so they scroll horizontally */
+
+    /* ✅ Scrollable long equations */
     .math-display {
       overflow-x: auto !important;
       overflow-y: hidden;
       max-width: 100%;
-      -webkit-overflow-scrolling: touch; /* smooth scrolling on mobile */
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* Add a little padding below equations */
+    .math-display > .MathJax {
+      padding-bottom: 0.5rem;
+    }
+
     .math-display::-webkit-scrollbar {
-      height: 2px;
+      height: 8px;
     }
     .math-display::-webkit-scrollbar-thumb {
       background: #ccc;
