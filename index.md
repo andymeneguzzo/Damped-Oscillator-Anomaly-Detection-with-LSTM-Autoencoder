@@ -72,7 +72,8 @@ $$
 
 The plot below shows the displacement $x(t)$ with respect to $t$ (already containing anomalies). 
 
-![Damped Oscillator Data - x(t) plot](plots/Damped_Oscillator_Data.png)
+<img src="plots/Damped_Oscillator_Data.png" width="80%">
+
 
 ## LSTM Autoencoder model
 
