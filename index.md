@@ -21,19 +21,23 @@ An **LSTM (Long Short-Term Memory)** is a **recurrent neural network (RNN)** arc
 In a **reconstruction-based anomaly detection** setup, an LSTM Autoencoder is trained to reconstruct normal behaviour. When model is tested, windows that deviate from learned dynamics give higher **reconstruction errors** and are flagged as anomalies if the errors exceed the set threshold. The training methods studied are:
 - **Standard MSE loss**: model **minimizes the pointwise reconstruction error between the input and it's reconstruction**. Though being simple, it's generally stable and widely applicable. However, it presents limitations in understanding the dynamics of the system, so every reconstruction minimizing MSE is considered acceptable, even if not physically normal.
 - **Physics-informed loss**: add MSE loss term to a residual penalty that embeds the damped oscillator equation $x'' + 2\zeta\omega_0 x' + \omega_0^2 x = 0$. To achieve this, I approximate $x'$ and $x''$ with **finite differences** on the reconstructed sequence and penalize the squared residual, thus obtaining the total loss:
+
 $$
 L = \mathrm{MSE}(x, \hat{x}) + \lambda_{\mathrm{phys}} \cdot \left\| x'' + 2\zeta\omega_0 x' + \omega_0^2 x \right\|^2
 $$
+
 where $\lambda_{\mathrm{phys}}$ controls how much the physics loss contributes to total loss estimation, thus enforcing the autoencoder to understand reconstruction that are both close to the input but also physically consistent with system's dynamics, **improving sensitivity** to physically implausable deviations.  
 
 Comparing these objectives on the same dataset, I can assess wether pure MSE loss or embedded physical knowledge into the training can improve anomaly detection without lossing performance.
 
 ## Dataset
 I simulate the **dynamics of a 1-dimensional noisy damped harmonic oscillator**. Dynamics of the system are governed by the equation:
+
 $$
 x(t) = e^{-\zeta \omega_0 t} \cos\!\left(\omega_0 \sqrt{1 - \zeta^2}\, t\right) + \varepsilon(t), 
 \qquad \varepsilon(t) \sim \mathcal{N}(0, \sigma^2)
 $$
+
 where $\zeta$ is the damping ratio, $\omega_0$ the natural angular frequency and $\varepsilon(t)$ the Gaussian noise. I generate $T = 60,000$ samples spanning $t = 0$ to $t = 599.99$ with $dt = 0.01$ step. I then inject four types of anomalies: 
 - **Spikes**: isolated points with abnormal impulses $x_i + a \rightarrow x_i$, with $a \in [2.5, 5.5]$
 - **Level shifts**: 400-width segments are shifted by constant offset
@@ -44,9 +48,11 @@ The feature analyzed is the displacement $x_t$. To preprocess the data I create 
 - length $W = 128$ and stride $s = 32$
 - for each start index $k$, I extract $X_k = (x_k, x_{k+1},...,x_{k+W-1}) \in \mathbb{R}^{128 \times 1}$
 - window label $y_k$ is set to 1 if at least 5% of it's points are anomalous
+
 $$
 y_k = \mathbf{1}\!\left( \frac{1}{W} \sum_{j=0}^{W-1} y_{k+j}^{\text{point}} \ge 0.05 \right)
 $$
+
 otherwise $y_k = 0$. After windowing process, I get 1,872 windows with approximately anomaly rate ≈ 31.7%.
 
 I split normal windows in:
@@ -59,6 +65,7 @@ I split anomaly windows in:
 - 50% validation anomalies
 
 Finally, before model training, (normal) data is **scaled** using ```StandardScaler``` on the flattened windows and **normalized** so that training distribution has zero mean and unit variance
+
 $$
 \tilde{x} = \frac{x - \mu_{\text{train}}}{\sigma_{\text{train}}}
 $$
