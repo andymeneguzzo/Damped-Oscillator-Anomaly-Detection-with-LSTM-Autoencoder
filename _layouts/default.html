@@ -67,6 +67,22 @@
     a:hover {
       text-decoration: underline;
     }
+      /* Wrap long MathJax equations so they scroll horizontally */
+    .math-display {
+      overflow-x: auto !important;
+      overflow-y: hidden;
+      max-width: 100%;
+      -webkit-overflow-scrolling: touch; /* smooth scrolling on mobile */
+    }
+
+    /* Add a little padding below equations */
+    .math-display::-webkit-scrollbar {
+      height: 2px;
+    }
+    .math-display::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
   </style>
 </head>
 

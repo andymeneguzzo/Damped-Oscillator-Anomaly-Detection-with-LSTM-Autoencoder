@@ -73,7 +73,7 @@ $$
 The plot below shows the displacement $x(t)$ with respect to $t$ (already containing anomalies). 
 
 <p align="center">
-  <img src="plots/Damped_Oscillator_Data.png" width="70%">
+  <img src="plots/Damped_Oscillator_Data.png" width="90%">
 </p>
 
 
