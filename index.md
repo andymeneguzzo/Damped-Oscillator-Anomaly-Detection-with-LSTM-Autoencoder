@@ -1,3 +1,10 @@
+---
+layout: default
+title: LSTM Autoencoder for Anomaly Detection on Damped Oscillator Dataset - MSE loss vs Physics-Informed loss
+---
+{% include mathjax.html %}
+
+
 # LSTM Autoencoder for Anomaly Detection on Damped Oscillator Dataset - MSE loss vs Physics-Informed loss
 
 ## Abstract
