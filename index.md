@@ -188,8 +188,6 @@ To evaluate the models we use commonly used performance metrics: F1, Precision, 
 | **MSE Loss Model**         | 0.976 | 0.980 | 0.902 | 0.958      | 0.852  |
 | **Physics-Informed Model** | 0.973 | 0.977 | 0.894 | 0.941      | 0.852  |
 
----
-
 ### Results with Youden’s J. Threshold
 
 | Model                     | AUROC | F1    | Precision | Recall |
