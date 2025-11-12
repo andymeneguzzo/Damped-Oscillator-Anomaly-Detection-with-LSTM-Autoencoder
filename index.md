@@ -8,7 +8,7 @@ title: LSTM Autoencoder for Anomaly Detection on Damped Oscillator Dataset - MSE
 # LSTM Autoencoder for Anomaly Detection on Damped Oscillator Dataset - MSE loss vs Physics-Informed loss
 
 ## Abstract
-Anomalies are data points that deviate, subtly or evidently, from normal behaviour. They can occur in a variety of contexts: economics, cybersecurity, manifacturing, robotics and many others. Detecting anomalies is a fundamental task to prevent potential financial consequences, information loss and damage to systems or people. In this project, I study **reconstruction-based Anomaly Detection** on simulated **damped harmonic oscillator** data training an **LSTM Autoencoder**, comparing traditional **mean squared error (MSE) loss** to a **Physics-informed loss** that embeds the system's dynamics equation. Normal data is simulated from a noisy underdamped harmonic oscillator. Anomalies (spikes, level shifts, frequency shifts and variance bursts) are inserted and labelled at window level after overlapping segmentation (128-size window, stride 32) and standardization. The baseline LSTM Autoencoder is first trained with MSE loss. Afterwards it is trained with a total loss that sums MSE and an ODE residual embedding the damped oscillator equation, encouraging reconstructions with physical knowledge. The two models are evaluated via **F1-maximizing reconstruction-error thresholding** on validation data. On test data, both models present strong performance with **97.3% AUROC and 97.7% AUPRC**. **Physics-informed loss slightly improves F1 score, compared to MSE loss, from 89% to 89.4%**, demonstrating better sensitivity to anomalies thanks to it's dynamics knowledge. 
+Anomalies are data points that deviate, subtly or evidently, from normal behaviour. They can occur in a variety of contexts: economics, cybersecurity, manifacturing, robotics and many others. Detecting anomalies is a fundamental task to prevent potential financial consequences, information loss and damage to systems or people. In this project, I study **reconstruction-based Anomaly Detection** on simulated **damped harmonic oscillator** data training an **LSTM Autoencoder**, comparing traditional **mean squared error (MSE) loss** to a **Physics-informed loss** that embeds the system's dynamics equation. Normal data is simulated from a noisy underdamped harmonic oscillator. Anomalies (spikes, level shifts, frequency shifts and variance bursts) are inserted and labelled at window level after overlapping segmentation (128-size window, stride 32) and standardization. The baseline LSTM Autoencoder is first trained with MSE loss. Afterwards it is trained with a total loss that sums MSE and an ODE residual embedding the damped oscillator equation, encouraging reconstructions with physical knowledge. The two models are evaluated via **F1-maximizing reconstruction-error thresholding** and **Youden J. criterion** on validation data. On test data, both models present strong performance with **97.6% AUROC and 98.0% AUPRC**. **Physics-informed loss slightly improves F1 score, compared to MSE loss, from 90.2% to 91.3%**, demonstrating better sensitivity to anomalies thanks to it's dynamics knowledge. 
 
 ## Introduction
 When studying the behaviour of **dynamical systems**, it's fundamental to be able to robustly analyze **time series data** and understand temporal dependencies and constraints imposed by dynamical equations. With the right tools it is possible to detect anomalies in time series data and potential prevent failures, flag sensor faults and regime shifts. In this project, thanks to it's capability of understanding time-sequantial data, I use LSTM Autoencoder to learn the **manifold** of normal dynamics and flag as anomalous temporal windows with high reconstruction error. I then compare coventional training with **MSE loss** to a **Physics informed loss** that augments MSE with the **damped oscillator differential equation**. 
@@ -108,7 +108,45 @@ For an **LSTM Autoencoder**:
 During training on normal data, LSTM learns to reconstruct normal dynamics and anomalies deviate from normal learned patterns, therefore yielding higher reconstruction error $\left\| X - \hat{X}\right\|^2$.
 
 ## MSE loss vs. Physics-Informed loss
-....
+The LSTM Autoencoder is trained to minimize mean squared error (MSE) between each input window $X$ and it's reconstruction $\hat{X}$. For a $B$-sized batch, the objective function is
+
+$$
+\mathbf{L}_{\text{MSE}} = \frac{1}{BW} \sum_{b=1}^{B} \sum_{t=1}^{W} \left( x_t^{(b)} - \hat{x}_t^{(b)} \right)^2
+$$
+
+This loss encourages reproduction of observed patterns with no physical knowledge of the normal data learned. To solve this problem I introduce a physics-informed training function where the loss is augmented with a penalty derived from the damped harmonic oscillatror equation
+
+$$
+x''(t) + 2 \xi \omega_0 x'(t) + \omega_0^2 x(t) = 0.
+$$
+
+To achieve this I approximate derivatives with finite differences starting from reconstructed sequencies $\hat{x}$
+
+$$
+\hat{x}'_t \approx \frac{\hat{x}_{t+1} - \hat{x}_{t-1}}{2 \, \Delta t}, \qquad
+\hat{x}''_t \approx \frac{\hat{x}_{t+1} - 2\hat{x}_t + \hat{x}_{t-1}}{\Delta t^2},
+$$
+
+where $\Delta t = dt$ sampling interval. Therefore, the physics residual evaluates how much the reconstruction satisfies the ODE
+
+$$
+r_t = \hat{x}''_t + 2 \xi \omega_0 \hat{x}'_t + \omega_0^2 \hat{x}_t.
+$$
+
+The physics-informed objective averages the square residual over timesteps
+
+$$
+\mathbf{L}_{\text{phys}} = \frac{1}{B (W - 2)} 
+\sum_{b=1}^{B} \sum_{t=2}^{W-1} \left( r_t^{(b)} \right)^2
+$$
+
+and is summed to the $\mathrm{MSE}$-based loss to achieve this formulation
+
+$$
+\mathbf{L}_{\text{total}} = \mathbf{L}_{\text{MSE}} + \lambda_{\text{phys}} \mathbf{L}_{\text{phys}}
+$$
+
+where $\lambda_{phys}$ controls how important the contribution of physical loss is to the total loss. 
 
 ## Implementation
 ...
