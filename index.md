@@ -157,6 +157,7 @@ For the noisy damped harmonic oscillator simulation, I generate 60,000 samples w
 - Level shifts: ```n_shifts=20```, width 400
 - Frequency shifts: ```n_regions=10```, width 500 and frequency between 0.5 and 1.7
 - Variance bursts: ```n_bursts=14```, width 300
+
 and label anomalies by marking their indices. 
 
 ### Preprocessing
