@@ -174,7 +174,28 @@ I compute the reconstruction error on validation and test windows with ```recon_
 The model on test performance is evaluated with ```evaluate_on_test``` that returns AUROC, AUPRC, F1, Precision and Recall for each thresholding strategy. 
 
 ## Results
+To evaluate the models we use commonly used performance metrics: F1, Precision, Recall, and complementary AUROC and AUPRC:
+- AUROC: measures ability to distinguish anomalies across thresholds
+- AUPRC: measures performance under class imbalance
+- $F_1 = 2 \cdot \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}$
+- $\text{Precision} = \frac{TP}{TP + FP}$
+- $\text{Recall} = \frac{TP}{TP + FN}$
 
+### Results with F1-max Threshold
+
+| Model                     | AUROC | AUPRC | F1    | Precision | Recall |
+|----------------------------|:-----:|:-----:|:-----:|:----------:|:------:|
+| **MSE Loss Model**         | 0.976 | 0.980 | 0.902 | 0.958      | 0.852  |
+| **Physics-Informed Model** | 0.973 | 0.977 | 0.894 | 0.941      | 0.852  |
+
+---
+
+### Results with Youden’s J. Threshold
+
+| Model                     | AUROC | F1    | Precision | Recall |
+|----------------------------|:-----:|:-----:|:----------:|:------:|
+| **MSE Loss Model**         | 0.976 | 0.902 | 0.958      | 0.852  |
+| **Physics-Informed Model** | 0.973 | 0.913 | 0.924      | 0.902  |
 
 ## Future work
-...
+
