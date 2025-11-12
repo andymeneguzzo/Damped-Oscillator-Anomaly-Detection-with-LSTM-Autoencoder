@@ -149,10 +149,32 @@ $$
 where $\lambda_{phys}$ controls how important the contribution of physical loss is to the total loss. 
 
 ## Implementation
-...
+For this project I organized my experiment framework in modular Python scripts defined in the ```/utils``` directory. The main experiment is fully implemented in the ```LSTM_experiments.ipynb``` notebook. 
+
+### Simulation
+For the noisy damped harmonic oscillator simulation, I generate 60,000 samples with ```damped_oscillator(T=60000, dt=0.01, zeta=0.03, omega0=2π*0.8, noise=0.04)```. Then I copy the signal and inject anomalies sequentially: 
+- Spikes: ```n_spikes=120```, amplitude between 2.5 and 5.5
+- Level shifts: ```n_shifts=20```, width 400
+- Frequency shifts: ```n_regions=10```, width 500 and frequency between 0.5 and 1.7
+- Variance bursts: ```n_bursts=14```, width 300.
+and label anomalies by marking their indices. 
+
+### Preprocessing
+I create overlapping windows with ```make_windows(win=128, stride=32, require_ratio=0.05)```, so each sample in ```X``` has shape ```(128, 1)```, and windows are labelled as anomalous if at least 5% of their samples and marked as anomalous. Training set uses only normal windows, while validation and test receive mixed shuffled normal and anomalous windows. Then I fit ```StandardScaler``` on training widnows and apply it to train/validation/test sets.
+
+### Model training
+I initialize a LSTM Autoencoder with ```in_dim=1```, ```hidden=64```, ```latent=32```, ```num_layers=1```, ```dropout=1```. I train the two variants for 100 epochs using Adam optimizer, ```lr=1e-3``` and ```weight_decay=1e-5```: 
+- ```train_autoencoder``` trains the model to minimize MSE on normal training widnows, validation loss is computed on the mixed validation set
+- ```train_autoencoder_phys``` adds the ODE residual penalty with ```dt=0.01```, ```zeta=0.02```, ```omega0=2π*1.0``` and ```lambda_phys=2.5```. 
+
+### Threshold
+I compute the reconstruction error on validation and test windows with ```recon_errors```. I then tune the threshold using ```tune_threshold``` which selects the threshold that maximizes F1 score. In alternative, one can derive the threshold with Youden J.'s criterion with the function ```threshold_youden```. 
+
+### Evaluation
+The model on test performance is evaluated with ```evaluate_on_test``` that returns AUROC, AUPRC, F1, Precision and Recall for each thresholding strategy. 
 
 ## Results
-...
+
 
 ## Future work
 ...
