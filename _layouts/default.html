@@ -86,7 +86,7 @@
 
     /* On small screens, make tables horizontally scrollable */
     @media (max-width: 768px) {
-      /* Make tables scrollable by converting to block and allowing horizontal scroll */
+      /* Make table a scrollable block container */
       table {
         display: block;
         overflow-x: auto;
@@ -94,17 +94,19 @@
         width: 100%;
       }
       
-      /* Make thead and tbody display as separate tables to maintain structure */
+      /* Make thead and tbody separate tables with fixed layout for perfect alignment */
       table thead {
         display: table;
         width: 100%;
-        table-layout: auto;
+        min-width: 600px; /* Ensure table is wider than viewport for scrolling */
+        table-layout: fixed;
       }
       
       table tbody {
         display: table;
         width: 100%;
-        table-layout: auto;
+        min-width: 600px; /* Match thead width for alignment */
+        table-layout: fixed;
       }
       
       table tr {
@@ -116,12 +118,28 @@
         display: table-cell;
         white-space: nowrap;
         padding: 0.5rem 0.75rem;
+        box-sizing: border-box;
       }
       
-      /* Ensure thead and tbody maintain their content width */
-      table thead,
-      table tbody {
-        min-width: max-content;
+      /* Set matching column widths for perfect alignment */
+      /* Model column - wider */
+      table thead th:nth-child(1),
+      table tbody td:nth-child(1) {
+        width: 25%;
+      }
+      
+      /* Metric columns - equal width */
+      table thead th:nth-child(2),
+      table tbody td:nth-child(2),
+      table thead th:nth-child(3),
+      table tbody td:nth-child(3),
+      table thead th:nth-child(4),
+      table tbody td:nth-child(4),
+      table thead th:nth-child(5),
+      table tbody td:nth-child(5),
+      table thead th:nth-child(6),
+      table tbody td:nth-child(6) {
+        width: 15%;
       }
     }
 
