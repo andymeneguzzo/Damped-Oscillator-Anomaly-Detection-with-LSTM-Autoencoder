@@ -84,17 +84,18 @@
       table-layout: auto;
     }
 
-    /* On small screens, wrap table in scrollable container */
+    /* On small screens, make table horizontally scrollable */
     @media (max-width: 768px) {
-      /* Make table scrollable by using block display with internal table structure */
+      /* Wrap table in scrollable container */
       table {
         display: block;
         overflow-x: auto;
+        overflow-y: hidden;
         width: 100%;
-        min-width: 500px; /* Ensure table maintains minimum width for readability */
+        min-width: max-content; /* Table takes full width of its content for scrolling */
       }
       
-      /* Keep table structure intact */
+      /* Keep table structure intact and maintain full width */
       table thead {
         display: table-header-group;
       }
@@ -110,6 +111,7 @@
       table th,
       table td {
         display: table-cell;
+        white-space: nowrap; /* Prevent text wrapping in cells */
       }
     }
 
@@ -146,24 +148,40 @@
       background-color: #f0f0f0;
     }
 
-    /* Style scrollbar for tables */
+    /* Style scrollbar for tables - visible on mobile for better UX */
     table::-webkit-scrollbar {
-      height: 8px;
+      height: 10px; /* Slightly taller for mobile touch targets */
+    }
+
+    table::-webkit-scrollbar-track {
+      background: #f1f1f1;
+      border-radius: 5px;
     }
 
     table::-webkit-scrollbar-thumb {
-      background: #ccc;
-      border-radius: 4px;
+      background: #888;
+      border-radius: 5px;
     }
 
     table::-webkit-scrollbar-thumb:hover {
-      background: #999;
+      background: #555;
     }
 
     /* Firefox scrollbar for tables */
     table {
       scrollbar-width: thin;
-      scrollbar-color: #ccc transparent;
+      scrollbar-color: #888 #f1f1f1; /* More visible on mobile */
+    }
+
+    /* Make scrollbar more visible on small screens */
+    @media (max-width: 768px) {
+      table::-webkit-scrollbar {
+        height: 12px; /* Even taller on mobile */
+      }
+      
+      table::-webkit-scrollbar-thumb {
+        background: #666; /* Darker for better visibility */
+      }
     }
 
     /* ✅ Scrollable long equations - MathJax 3.x */
