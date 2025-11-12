@@ -70,20 +70,61 @@
       text-decoration: underline;
     }
 
-    /* Boxed table styling */
+    /* Boxed table styling - responsive */
+    /* Make tables scrollable on small screens */
     table {
       border-collapse: collapse;
       border: 1px solid #ddd;
       width: 100%;
+      max-width: 100%;
       margin: 1.5rem 0;
       background-color: white;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      display: table;
+      table-layout: auto;
+    }
+
+    /* On small screens, wrap table in scrollable container */
+    @media (max-width: 768px) {
+      /* Make table scrollable by using block display with internal table structure */
+      table {
+        display: block;
+        overflow-x: auto;
+        width: 100%;
+        min-width: 500px; /* Ensure table maintains minimum width for readability */
+      }
+      
+      /* Keep table structure intact */
+      table thead {
+        display: table-header-group;
+      }
+      
+      table tbody {
+        display: table-row-group;
+      }
+      
+      table tr {
+        display: table-row;
+      }
+      
+      table th,
+      table td {
+        display: table-cell;
+      }
     }
 
     th, td {
       border: 1px solid #ddd;
       padding: 0.75rem 1rem;
       text-align: left;
+    }
+
+    /* Reduce padding on small screens */
+    @media (max-width: 600px) {
+      th, td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
+      }
     }
 
     th {
@@ -103,6 +144,26 @@
 
     tr:hover {
       background-color: #f0f0f0;
+    }
+
+    /* Style scrollbar for tables */
+    table::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    table::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
+    table::-webkit-scrollbar-thumb:hover {
+      background: #999;
+    }
+
+    /* Firefox scrollbar for tables */
+    table {
+      scrollbar-width: thin;
+      scrollbar-color: #ccc transparent;
     }
 
     /* ✅ Scrollable long equations - MathJax 3.x */
