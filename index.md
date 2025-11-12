@@ -196,5 +196,8 @@ To evaluate the models we use commonly used performance metrics: F1, Precision, 
 | **MSE**         | 0.976 | 0.902 | 0.958      | 0.852  |
 | **Physics-Informed** | 0.973 | 0.913 | 0.924      | 0.902  |
 
+## Summary
+...
+
 ## Future work
 ...
