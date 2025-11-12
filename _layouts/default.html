@@ -84,24 +84,27 @@
       table-layout: auto;
     }
 
-    /* On small screens, make table horizontally scrollable */
+    /* On small screens, make tables horizontally scrollable */
     @media (max-width: 768px) {
-      /* Wrap table in scrollable container */
+      /* Make tables scrollable by converting to block and allowing horizontal scroll */
       table {
         display: block;
         overflow-x: auto;
         overflow-y: hidden;
         width: 100%;
-        min-width: max-content; /* Table takes full width of its content for scrolling */
       }
       
-      /* Keep table structure intact and maintain full width */
+      /* Make thead and tbody display as separate tables to maintain structure */
       table thead {
-        display: table-header-group;
+        display: table;
+        width: 100%;
+        table-layout: auto;
       }
       
       table tbody {
-        display: table-row-group;
+        display: table;
+        width: 100%;
+        table-layout: auto;
       }
       
       table tr {
@@ -111,7 +114,14 @@
       table th,
       table td {
         display: table-cell;
-        white-space: nowrap; /* Prevent text wrapping in cells */
+        white-space: nowrap;
+        padding: 0.5rem 0.75rem;
+      }
+      
+      /* Ensure thead and tbody maintain their content width */
+      table thead,
+      table tbody {
+        min-width: max-content;
       }
     }
 
