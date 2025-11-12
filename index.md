@@ -78,11 +78,43 @@ The plot below shows the displacement $x(t)$ with respect to $t$ (already contai
 
 
 
-## LSTM Autoencoder model
+## LSTM Neural Network and Autoencoder:
+Long Short-Term Memory (LSTM) networks belong to family of recurrent neural networks (RNN) architectures, they're well suited to **capture long-range dependencies in sequential data**. The main limitation of RNNs is their tendency to forget older context due to the vanishing gradient problem, LSTMs solve this with **gating mechanisms** that control information flow, allowing them to remember patterns over hundreds of timesteps. For this reason, they're a good fit for anomaly detection on time-series data such as dynamical system measurements, where previous behaviour influences future behaviour. 
 
+At timestep $t$, the LSTM updates its **hidden state $h_t$** and **cell state $c_t$** using the **current input $x_t$** and **previous states $h_{t-1}, c_{t-1}$**. The main components of LSTMs are:
+- **Forget gate $f_t$**: governs how much to retain of the previous state
+- Input gate $i_t$ and candidate state $\tilde{c_t}$: decide how much new information to add
+- **Output gate $o_t$**: controls parts of the cell state that influence the hidden state
+
+Using sigmoid $\sigma$ and $tanh()$ activations, with learnable weights $W$ and biases $b$, the canonical equations for a LSTM network are:
+
+$$
+\begin{align*}
+f_t &= \sigma(W_f[h_{t-1}, x_t] + b_f), && \text{(forget gate)} \\
+i_t &= \sigma(W_i[h_{t-1}, x_t] + b_i), && \text{(input gate)} \\
+\tilde{c}_t &= \tanh(W_c[h_{t-1}, x_t] + b_c), && \text{(candidate state)} \\
+c_t &= f_t \cdot c_{t-1} + i_t \cdot \tilde{c}_t, && \text{(cell update)} \\
+o_t &= \sigma(W_o[h_{t-1}, x_t] + b_o), && \text{(output gate)} \\
+h_t &= o_t \cdot \tanh(c_t), && \text{(hidden state)}
+\end{align*}
+$$
+
+where $\cdot$ is elementwise multiplication. The cell state $c_t$ is responsible for long-term memory, while $h_t$ conveys output at the end of each step. 
+
+For an **LSTM Autoencoder**:
+- **Encoder**: receives every window $X \in \mathbb{R}^{W \times d}$ (with $d = 1$ feature per timestep) and compresses it into a **latent (lower-dimensional) vector**
+- **Decoder**: reconstructs sequence from the latent representation. 
+
+During training on normal data, LSTM learns to reconstruct normal dynamics and anomalies deviate from normal learned patterns, therefore yielding higher reconstruction error $\left\| X - \hat{X}\right\|^2$.
 
 ## MSE loss vs. Physics-Informed loss
+....
 
 ## Implementation
+...
 
 ## Results
+...
+
+## Future work
+...
