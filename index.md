@@ -7,13 +7,16 @@ title: LSTM Autoencoder for Anomaly Detection on Damped Oscillator Dataset - MSE
 
 # LSTM Autoencoder for Anomaly Detection on Damped Oscillator Dataset - MSE loss vs Physics-Informed loss
 
+### Author
+Andrés Christian Meneguzzo
+
 ## Abstract
 Anomalies are data points that deviate from normal behaviour. They can occur in a variety of contexts: economics, cybersecurity, manufacturing, robotics and many others. Detecting anomalies is a fundamental task to prevent potential financial consequences, information loss and damage to systems or people. In this project, I study **reconstruction-based Anomaly Detection** on simulated **damped harmonic oscillator** data training an **LSTM Autoencoder**, comparing traditional **mean squared error (MSE) loss** to a **Physics-informed loss** that embeds the system's dynamics equation. Normal data is simulated from a noisy underdamped harmonic oscillator. Anomalies (spikes, level shifts, frequency shifts and variance bursts) are inserted and labelled at window level after overlapping segmentation (128-size window, stride 32) and standardization. The baseline LSTM Autoencoder is first trained with MSE loss. Afterwards it is trained with a total loss that sums MSE and an ODE residual that embeds the damped oscillator equation, encouraging reconstructions with physical knowledge. The two models are evaluated via **F1-maximizing reconstruction-error thresholding** and **Youden J. criterion** on validation data. On test data, both models present strong performance with **97.6% AUROC and 98.0% AUPRC**. **Physics-informed loss improves F1 score, compared to MSE loss, from 90.2% to 91.3%**, demonstrating better sensitivity to anomalies thanks to its dynamics knowledge. 
 
 ## Introduction
 When studying the behaviour of **dynamical systems**, it's fundamental to be able to robustly analyze **time series data** and understand temporal dependencies and constraints imposed by dynamical equations. With the right tools it is possible to detect anomalies in time series data and potentially prevent failures and flag sensor faults and regime shifts. In this project I use an LSTM Autoencoder to learn the **manifold** of normal dynamics and flag as anomalous temporal windows with high reconstruction error. I then compare conventional training with **MSE loss** to a **Physics informed loss** that augments MSE with the **damped oscillator differential equation**. 
 
-An **LSTM (Long Short-Term Memory)** is a **recurrent neural network (RNN)** architecture designed to model **sequential data with long-range dependencies**. Information flow through time is controlled by its **gates: Input, Forget and Output**, allowing the model to conserve or remove information and context as needed. Its architecture is suited especially suited for:
+An **LSTM (Long Short-Term Memory)** is a **recurrent neural network (RNN)** architecture designed to model **sequential data with long-range dependencies**. Information flow through time is controlled by its **gates: Input, Forget and Output**, allowing the model to conserve or remove information and context as needed. Its architecture is especially suited for:
 - forecasting and filtering time-sequential signals
 - learning dynamics in noisy settings measured in timesteps
 - compressing high dimensional data (encoding) into compact lower-dimensional latent representation and understand normal behaviour
